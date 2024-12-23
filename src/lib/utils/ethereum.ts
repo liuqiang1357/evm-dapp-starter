@@ -15,9 +15,9 @@ import { createConfig } from 'wagmi';
 import { ChainId, chainIds, ChainMap } from '@/configs/chains';
 import {
   ChainMismatchError,
-  ConnectorNotConnectedError,
   EthereumError,
   UserRejectedRequestError,
+  WalletNotConnectedError,
 } from '../errors/ethereum';
 
 const chains: ChainMap<Chain> = {
@@ -41,18 +41,18 @@ export const wagmiConfig = createConfig(
 );
 
 export function convertMaybeEthereumError(error: Error): Error {
+  if (error instanceof WagmiBaseError) {
+    if (error instanceof WagmiConnectorNotConnectedError) {
+      return new WalletNotConnectedError(undefined, { cause: error });
+    }
+    return new EthereumError(error.shortMessage, { cause: error });
+  }
   if (error instanceof ViemBaseError) {
     if (error instanceof ViemUserRejectedRequestError) {
       return new UserRejectedRequestError(error.shortMessage, { cause: error });
     }
     if (error instanceof ViemChainMismatchError) {
       return new ChainMismatchError(error.shortMessage, { cause: error });
-    }
-    return new EthereumError(error.shortMessage, { cause: error });
-  }
-  if (error instanceof WagmiBaseError) {
-    if (error instanceof WagmiConnectorNotConnectedError) {
-      return new ConnectorNotConnectedError(undefined, { cause: error });
     }
     return new EthereumError(error.shortMessage, { cause: error });
   }
