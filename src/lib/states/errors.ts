@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { convertMaybeEthereumError } from '../utils/ethereum';
+import { convertMaybeEvmError } from '../utils/evm';
 
 const lastErrorBaseAtom = atom<Error | null>(null);
 
@@ -7,7 +7,7 @@ export const lastErrorAtom = atom(
   get => get(lastErrorBaseAtom),
   (_, set, error: Error | null) => {
     if (error != null) {
-      error = convertMaybeEthereumError(error);
+      error = convertMaybeEvmError(error);
     }
     set(lastErrorBaseAtom, error);
   },

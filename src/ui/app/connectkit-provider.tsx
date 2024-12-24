@@ -5,7 +5,7 @@ import { useAtomValue } from 'jotai';
 import { useTheme } from 'next-themes';
 import { FC, ReactNode } from 'react';
 import { mainnet } from 'viem/chains';
-import { chainIdAtom } from '@/lib/states/ethereum';
+import { chainIdAtom } from '@/lib/states/evm';
 import { AccountIcon } from './account-icon';
 
 // Hot-fix: Connectkit uses this to resolve address name, but it is unstable.

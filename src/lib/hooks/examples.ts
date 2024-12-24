@@ -10,7 +10,7 @@ import {
   transferToken,
   TransferTokenParams,
 } from '../apis/examples';
-import { wagmiConfig } from '../utils/ethereum';
+import { wagmiConfig } from '../utils/evm';
 
 export function useTokenDecimals(params: GetTokenDecimalsParams | SkipToken) {
   return useQuery({

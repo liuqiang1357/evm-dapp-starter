@@ -12,7 +12,7 @@ import {
   useTokenSymbol,
   useTransferToken,
 } from '@/lib/hooks/examples';
-import { accountAtom, chainIdAtom } from '@/lib/states/ethereum';
+import { accountAtom, chainIdAtom } from '@/lib/states/evm';
 import { formatNumber } from '@/lib/utils/formatters';
 import { cn } from '@/lib/utils/shadcn';
 import { Button } from '@/ui/shadcn/button';

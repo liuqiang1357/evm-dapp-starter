@@ -6,7 +6,7 @@ import { Provider as JotaiProvider } from 'jotai';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { FC, ReactNode } from 'react';
 import { WagmiProvider } from 'wagmi';
-import { wagmiConfig } from '@/lib/utils/ethereum';
+import { wagmiConfig } from '@/lib/utils/evm';
 import { store } from '@/lib/utils/jotai';
 import { queryClient } from '@/lib/utils/react-query';
 import { Toaster } from '@/ui/shadcn/sonner';

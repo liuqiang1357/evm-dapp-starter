@@ -1,5 +1,5 @@
 {
-  "name": "eth-dapp-starter",
+  "name": "evm-dapp-starter",
   "version": "0.1.0",
   "private": true,
   "type": "module",

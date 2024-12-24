@@ -7,7 +7,7 @@ import {
 } from '@wagmi/core';
 import { atom } from 'jotai';
 import { chainIds } from '@/configs/chains';
-import { wagmiConfig } from '../utils/ethereum';
+import { wagmiConfig } from '../utils/evm';
 
 const chainIdBaseAtom = atom(chainIds[0]);
 

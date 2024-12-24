@@ -6,7 +6,7 @@ import { Header } from '@/ui/app/header';
 import { Providers } from '@/ui/app/providers';
 
 export const metadata: Metadata = {
-  title: 'Eth Dapp Starter',
+  title: 'Evm Dapp Starter',
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
