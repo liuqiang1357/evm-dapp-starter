@@ -12,7 +12,7 @@ import {
 } from 'viem';
 import { arbitrum, goerli, mainnet, sepolia } from 'viem/chains';
 import { createConfig } from 'wagmi';
-import { ChainId, chainIds, ChainMap } from '@/configs/chains';
+import { ChainId, chainIds, ChainMap, chainNames } from '@/configs/chains';
 import {
   ChainMismatchError,
   EthereumError,
@@ -29,6 +29,27 @@ const chains: ChainMap<Chain> = {
     chain.rpcUrls.default.http[0] = 'https://ethereum-sepolia-rpc.publicnode.com' as never;
   }),
   [ChainId.Goerli]: goerli,
+  [ChainId.NeoxDev]: {
+    id: ChainId.NeoxDev,
+    name: chainNames[ChainId.NeoxDev],
+    nativeCurrency: {
+      name: 'GAS',
+      symbol: 'GAS',
+      decimals: 18,
+    },
+    rpcUrls: {
+      default: {
+        http: ['http://172.18.17.135:8562'],
+      },
+    },
+    blockExplorers: {
+      default: {
+        name: 'Neo X Chain Explorer',
+        url: 'http://localhost',
+      },
+    },
+    testnet: true,
+  },
 };
 
 export const wagmiConfig = createConfig(
