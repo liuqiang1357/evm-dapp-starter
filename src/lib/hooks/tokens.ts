@@ -9,7 +9,7 @@ import {
   GetTokenSymbolParams,
   transferToken,
   TransferTokenParams,
-} from '../apis/examples';
+} from '../apis/tokens';
 import { wagmiConfig } from '../utils/evm';
 
 export function useTokenDecimals(params: GetTokenDecimalsParams | SkipToken) {

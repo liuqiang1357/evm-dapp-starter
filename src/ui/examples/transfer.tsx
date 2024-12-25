@@ -11,7 +11,7 @@ import {
   useTokenDecimals,
   useTokenSymbol,
   useTransferToken,
-} from '@/lib/hooks/examples';
+} from '@/lib/hooks/tokens';
 import { accountAtom, chainIdAtom } from '@/lib/states/evm';
 import { formatNumber } from '@/lib/utils/formatters';
 import { cn } from '@/lib/utils/shadcn';
