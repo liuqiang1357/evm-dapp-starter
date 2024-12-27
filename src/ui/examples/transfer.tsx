@@ -50,7 +50,7 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
 
   const [amount, setAmount] = useState('');
 
-  const { mutateAsync: transferTokenAsync, isPending: transfering } = useTransferToken();
+  const { mutateAsync: mutationTransferToken, isPending: transfering } = useTransferToken();
 
   const transferToken = async () => {
     if (
@@ -61,7 +61,7 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
       isAddress(to) &&
       amount !== ''
     ) {
-      await transferTokenAsync({ chainId, address: token, account, decimals, to, amount });
+      await mutationTransferToken({ chainId, address: token, account, decimals, to, amount });
     }
   };
 
