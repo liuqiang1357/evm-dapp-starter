@@ -1,6 +1,4 @@
-export type Json = null | boolean | number | string | Json[] | { [prop: string]: Json };
-
-export function serialize(json: Json): string {
+export function serialize(json: unknown): string {
   if (typeof json === 'string') {
     try {
       JSON.parse(json);
@@ -11,7 +9,7 @@ export function serialize(json: Json): string {
   return JSON.stringify(json);
 }
 
-export function deserialize(string: string): Json {
+export function deserialize(string: string): unknown {
   try {
     return JSON.parse(string);
   } catch {

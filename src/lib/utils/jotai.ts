@@ -2,7 +2,7 @@ import { atom, createStore, SetStateAction, WritableAtom } from 'jotai';
 import { atomWithStorage as jotaiAtomWithStorage, RESET } from 'jotai/utils';
 import { SyncStorage } from 'jotai/vanilla/utils/atomWithStorage';
 import { ZodSchema, ZodTypeDef } from 'zod';
-import { deserialize, Json, serialize } from './json';
+import { deserialize, serialize } from './json';
 
 export const store = createStore();
 
@@ -11,12 +11,8 @@ type SetStateActionWithReset<Value> =
   | typeof RESET
   | ((prev: Value) => Value | typeof RESET);
 
-export function atomWithSchema<
-  Value extends Json,
-  DefaultValue extends Value,
-  ExtraArgs extends unknown[],
->(
-  baseAtom: WritableAtom<Json, [SetStateActionWithReset<Json>, ...ExtraArgs], void>,
+export function atomWithSchema<Value, DefaultValue extends Value, ExtraArgs extends unknown[]>(
+  baseAtom: WritableAtom<unknown, [SetStateActionWithReset<unknown>, ...ExtraArgs], void>,
   schema: ZodSchema<Value, ZodTypeDef, unknown>,
   defaultValue: DefaultValue,
 ): WritableAtom<Value, [SetStateActionWithReset<Value>, ...ExtraArgs], void> {
@@ -26,18 +22,21 @@ export function atomWithSchema<
       return result.success ? result.data : defaultValue;
     },
     (get, set, update: SetStateActionWithReset<Value>, ...args: ExtraArgs) => {
-      const nextValue = typeof update === 'function' ? update(get(derivedAtom)) : update;
+      const nextValue =
+        typeof update === 'function'
+          ? (update as (prev: unknown) => unknown)(get(derivedAtom))
+          : update;
       set(baseAtom, nextValue === defaultValue ? RESET : nextValue, ...args);
     },
   );
   return derivedAtom;
 }
 
-export function atomWithStorage<Value extends Json, DefaultValue extends Value>(
+export function atomWithStorage<Value, DefaultValue extends Value>(
   key: string,
   schema: ZodSchema<Value, ZodTypeDef, unknown>,
   defaultValue: DefaultValue,
-  storage?: SyncStorage<Json>,
+  storage?: SyncStorage<unknown>,
 ): WritableAtom<Value, [SetStateActionWithReset<Value>], void> {
   const baseAtom = jotaiAtomWithStorage(key, null, storage);
   return atomWithSchema(baseAtom, schema, defaultValue);
@@ -91,7 +90,7 @@ export type SetHashParamOptions = SetHashParamsOptions & {
   clearAll?: boolean;
 };
 
-export function atomWithHashParam<Value extends Json, DefaultValue extends Value>(
+export function atomWithHashParam<Value, DefaultValue extends Value>(
   key: string,
   schema: ZodSchema<Value, ZodTypeDef, unknown>,
   defaultValue: DefaultValue,
@@ -105,7 +104,7 @@ export function atomWithHashParam<Value extends Json, DefaultValue extends Value
         return deserialize(hashParam);
       }
     },
-    (get, set, update: SetStateActionWithReset<Json>, options?: SetHashParamOptions) => {
+    (get, set, update: SetStateActionWithReset<unknown>, options?: SetHashParamOptions) => {
       const nextValue = typeof update === 'function' ? update(get(baseAtom)) : update;
       const hashParams = new URLSearchParams(
         options?.clearAll === true ? undefined : (get(hashParamsAtom) ?? undefined),
