@@ -26,4 +26,7 @@ jobs:
       - name: Build project artifacts
         run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
       - name: Deploy project artifacts to Vercel
-        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+        run: |
+          DEPOLYED_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          PROJECT_NAME=$(curl https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID  -H "Authorization: Bearer ${{ secrets.VERCEL_TOKEN }}" | jq -r .name)
+          vercel alias --token=${{ secrets.VERCEL_TOKEN }} set $DEPOLYED_URL $PROJECT_NAME-$GITHUB_REF_NAME.vercel.app
