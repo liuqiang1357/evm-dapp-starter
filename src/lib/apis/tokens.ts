@@ -5,12 +5,12 @@ import { ierc20Abi } from '../abis/ierc20';
 import { wagmiConfig } from '../utils/evm';
 import { amountToRawAmount, rawAmountToAmount } from '../utils/misc';
 
-export type GetTokenDecimalsParams = {
+export type GetDecimalsParams = {
   chainId: ChainId;
   address: Address;
 };
 
-export async function getTokenDecimals(params: GetTokenDecimalsParams): Promise<number> {
+export async function getDecimals(params: GetDecimalsParams): Promise<number> {
   const decimals = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -20,12 +20,12 @@ export async function getTokenDecimals(params: GetTokenDecimalsParams): Promise<
   return decimals;
 }
 
-export type GetTokenSymbolParams = {
+export type GetSymbolParams = {
   chainId: ChainId;
   address: Address;
 };
 
-export async function getTokenSymbol(params: GetTokenDecimalsParams): Promise<string> {
+export async function getSymbol(params: GetDecimalsParams): Promise<string> {
   const symbol = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -35,14 +35,14 @@ export async function getTokenSymbol(params: GetTokenDecimalsParams): Promise<st
   return symbol;
 }
 
-export type GetTokenBalanceParams = {
+export type GetBalanceParams = {
   chainId: ChainId;
   address: Address;
   account: Address;
   decimals: number;
 };
 
-export async function getTokenBalance(params: GetTokenBalanceParams): Promise<string> {
+export async function getBalance(params: GetBalanceParams): Promise<string> {
   const balance = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -53,7 +53,7 @@ export async function getTokenBalance(params: GetTokenBalanceParams): Promise<st
   return rawAmountToAmount(balance, params.decimals);
 }
 
-export type TransferTokenParams = {
+export type TransferParams = {
   chainId: ChainId;
   address: Address;
   account: Address;
@@ -62,7 +62,7 @@ export type TransferTokenParams = {
   amount: string;
 };
 
-export async function transferToken(params: TransferTokenParams): Promise<Hash> {
+export async function transfer(params: TransferParams): Promise<Hash> {
   const hash = await writeContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,

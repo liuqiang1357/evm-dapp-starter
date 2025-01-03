@@ -1,72 +1,72 @@
 import { SkipToken, skipToken, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { waitForTransactionReceipt } from '@wagmi/core';
 import {
-  getTokenBalance,
-  GetTokenBalanceParams,
-  getTokenDecimals,
-  GetTokenDecimalsParams,
-  getTokenSymbol,
-  GetTokenSymbolParams,
-  transferToken,
-  TransferTokenParams,
+  getBalance,
+  GetBalanceParams,
+  getDecimals,
+  GetDecimalsParams,
+  getSymbol,
+  GetSymbolParams,
+  transfer,
+  TransferParams,
 } from '../apis/tokens';
 import { wagmiConfig } from '../utils/evm';
 
-export function useTokenDecimals(params: GetTokenDecimalsParams | SkipToken) {
+export function useDecimals(params: GetDecimalsParams | SkipToken) {
   return useQuery({
-    queryKey: ['token-decimals', params],
+    queryKey: ['decimals', params],
     queryFn:
       params !== skipToken
         ? async () => {
-            return await getTokenDecimals(params);
+            return await getDecimals(params);
           }
         : skipToken,
     staleTime: Infinity,
   });
 }
 
-export function useTokenSymbol(params: GetTokenSymbolParams | SkipToken) {
+export function useSymbol(params: GetSymbolParams | SkipToken) {
   return useQuery({
-    queryKey: ['token-symbol', params],
+    queryKey: ['symbol', params],
     queryFn:
       params !== skipToken
         ? async () => {
-            return await getTokenSymbol(params);
+            return await getSymbol(params);
           }
         : skipToken,
     staleTime: Infinity,
   });
 }
 
-export type UseTokenBalanceParams = Omit<GetTokenBalanceParams, 'decimals'>;
+export type UseBalanceParams = Omit<GetBalanceParams, 'decimals'>;
 
-export function useTokenBalance(params: UseTokenBalanceParams | SkipToken) {
-  const { data: decimals } = useTokenDecimals(
+export function useBalance(params: UseBalanceParams | SkipToken) {
+  const { data: decimals } = useDecimals(
     params !== skipToken ? { chainId: params.chainId, address: params.address } : skipToken,
   );
 
   const apiParams = params !== skipToken && decimals != null ? { ...params, decimals } : skipToken;
 
   return useQuery({
-    queryKey: ['token-balance', apiParams],
+    queryKey: ['balance', apiParams],
     queryFn:
       apiParams !== skipToken
         ? async () => {
-            return await getTokenBalance(apiParams);
+            return await getBalance(apiParams);
           }
         : skipToken,
   });
 }
 
-export function useTransferToken() {
+export function useTransfer() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (params: TransferTokenParams) => {
-      const hash = await transferToken(params);
+    mutationFn: async (params: TransferParams) => {
+      const hash = await transfer(params);
       await waitForTransactionReceipt(wagmiConfig, { chainId: params.chainId, hash });
       queryClient.invalidateQueries({
-        queryKey: ['token-balance', { chainId: params.chainId, account: params.account }],
+        queryKey: ['balance', { chainId: params.chainId, account: params.account }],
       });
     },
   });

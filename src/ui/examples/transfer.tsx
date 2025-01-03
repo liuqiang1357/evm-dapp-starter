@@ -6,12 +6,7 @@ import { ComponentProps, FC, useEffect, useState } from 'react';
 import { isAddress } from 'viem';
 import { ChainId } from '@/configs/chains';
 import { wethAddresses } from '@/configs/tokens';
-import {
-  useTokenBalance,
-  useTokenDecimals,
-  useTokenSymbol,
-  useTransferToken,
-} from '@/lib/hooks/tokens';
+import { useBalance, useDecimals, useSymbol, useTransfer } from '@/lib/hooks/tokens';
 import { accountAtom, chainIdAtom } from '@/lib/states/evm';
 import { formatNumber } from '@/lib/utils/formatters';
 import { cn } from '@/lib/utils/shadcn';
@@ -32,17 +27,17 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
     setToken(text);
   };
 
-  const { data: balance } = useTokenBalance(
+  const { data: balance } = useBalance(
     chainId === tokenChainId && account != null && isAddress(token)
       ? { chainId, address: token, account }
       : skipToken,
   );
 
-  const { data: symbol } = useTokenSymbol(
+  const { data: symbol } = useSymbol(
     chainId === tokenChainId && isAddress(token) ? { chainId, address: token } : skipToken,
   );
 
-  const { data: decimals } = useTokenDecimals(
+  const { data: decimals } = useDecimals(
     chainId === tokenChainId && isAddress(token) ? { chainId, address: token } : skipToken,
   );
 
@@ -50,9 +45,9 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
 
   const [amount, setAmount] = useState('');
 
-  const { mutateAsync: mutationTransferToken, isPending: transfering } = useTransferToken();
+  const { mutateAsync: mutationTransfer, isPending: transfering } = useTransfer();
 
-  const transferToken = async () => {
+  const transfer = async () => {
     if (
       chainId === tokenChainId &&
       account != null &&
@@ -61,7 +56,7 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
       isAddress(to) &&
       amount !== ''
     ) {
-      await mutationTransferToken({ chainId, address: token, account, decimals, to, amount });
+      await mutationTransfer({ chainId, address: token, account, decimals, to, amount });
     }
   };
 
@@ -92,7 +87,7 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
       <div>Amount:</div>
       <Input value={amount} onChange={event => setAmount(event.target.value)} />
 
-      <Button className="col-span-2 place-self-start" loading={transfering} onClick={transferToken}>
+      <Button className="col-span-2 place-self-start" loading={transfering} onClick={transfer}>
         Send
       </Button>
     </div>
