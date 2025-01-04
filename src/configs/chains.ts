@@ -11,8 +11,8 @@ export enum ChainId {
 }
 
 export const supportedChainIds = {
-  [Target.MainNet]: [ChainId.Mainnet, ChainId.Arbitrum],
-  [Target.TestNet]: [ChainId.Sepolia, ChainId.Goerli],
+  [Target.Mainnet]: [ChainId.Mainnet, ChainId.Arbitrum],
+  [Target.Testnet]: [ChainId.Sepolia, ChainId.Goerli],
 }[target];
 
 export const chains: Record<ChainId, Chain> = {

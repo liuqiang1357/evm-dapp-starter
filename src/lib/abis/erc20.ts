@@ -1,4 +1,4 @@
-export const ierc20Abi = [
+export const erc20Abi = [
   {
     anonymous: false,
     inputs: [
