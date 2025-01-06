@@ -6,3 +6,9 @@ export class InternalError extends BaseError {
     this.expose = options.expose ?? false;
   }
 }
+
+export class CancelledError extends InternalError {
+  constructor(message = 'Cancelled.', options: BaseErrorOptions = {}) {
+    super(message, options);
+  }
+}

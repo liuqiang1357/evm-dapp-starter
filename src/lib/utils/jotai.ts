@@ -100,9 +100,8 @@ export function atomWithHashParam<Value, DefaultValue extends Value>(
       const hashParam = get(hashParamsAtom)?.get(key);
       if (hashParam == null) {
         return defaultValue;
-      } else {
-        return deserialize(hashParam);
       }
+      return deserialize(hashParam);
     },
     (get, set, update: SetStateActionWithReset<unknown>, options?: SetHashParamOptions) => {
       const nextValue = typeof update === 'function' ? update(get(baseAtom)) : update;
