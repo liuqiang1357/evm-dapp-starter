@@ -1,11 +1,8 @@
 import { $enum } from 'ts-enum-util';
 
 export enum Target {
-  Mainnet = 'mainnet',
-  Testnet = 'testnet',
+  Production = 'production',
+  Development = 'development',
 }
 
-export const target = $enum(Target).asValueOrDefault(
-  process.env.NEXT_PUBLIC_TARGET,
-  Target.Mainnet,
-);
+export const target = $enum(Target).asValueOrThrow(process.env.NEXT_PUBLIC_TARGET);
