@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { Chain } from 'viem';
 import { arbitrum, goerli, mainnet, sepolia } from 'viem/chains';
-import { target, Target } from './env';
+import { target, Target } from './targets';
 
 export enum ChainId {
   Mainnet = 1,
