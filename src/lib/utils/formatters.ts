@@ -187,14 +187,14 @@ export type FormatTimeOptions = {
 };
 
 export function formatTime(
-  value: string | number | null | undefined,
+  time: string | number | null | undefined,
   { short = false, utc = false }: FormatTimeOptions = {},
 ): string {
-  if (value == null) {
+  if (time == null) {
     return '-';
   }
   return format(
-    utc ? toZonedTime(toDate(value), 'UTC') : toDate(value),
+    utc ? toZonedTime(toDate(time), 'UTC') : toDate(time),
     short
       ? 'yyyy-MM-dd HH:mm:ss'
       : utc
@@ -208,11 +208,11 @@ export type FormatTimeFromNowOptions = {
 };
 
 export function formatTimeFromNow(
-  value: string | number | null | undefined,
+  time: string | number | null | undefined,
   { useSuffix = true }: FormatTimeFromNowOptions = {},
 ): string {
-  if (value == null) {
+  if (time == null) {
     return '-';
   }
-  return formatDistanceToNowStrict(toDate(value), { addSuffix: useSuffix });
+  return formatDistanceToNowStrict(toDate(time), { addSuffix: useSuffix });
 }

@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js';
 
-export function rawAmountToAmount(rawAmount: bigint, unit: number): string {
+export function rawAmountToAmount(rawAmount: bigint, decimals: number): string {
   const bn = new BigNumber(rawAmount.toString());
-  return bn.dp(0, BigNumber.ROUND_DOWN).shiftedBy(-unit).toFixed();
+  return bn.dp(0, BigNumber.ROUND_DOWN).shiftedBy(-decimals).toFixed();
 }
 
-export function amountToRawAmount(amount: string, unit: number): bigint {
+export function amountToRawAmount(amount: string, decimals: number): bigint {
   const bn = new BigNumber(amount);
-  return BigInt(bn.shiftedBy(unit).dp(0, BigNumber.ROUND_DOWN).toFixed());
+  return BigInt(bn.shiftedBy(decimals).dp(0, BigNumber.ROUND_DOWN).toFixed());
 }
