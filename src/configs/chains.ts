@@ -17,11 +17,11 @@ export const supportedChainIds = {
 
 export const chains: Record<ChainId, Chain> = {
   [ChainId.Mainnet]: produce(mainnet, chain => {
-    chain.rpcUrls.default.http[0] = 'https://ethereum-rpc.publicnode.com' as never;
+    (chain.rpcUrls.default.http[0] as string) = 'https://ethereum-rpc.publicnode.com';
   }),
   [ChainId.Arbitrum]: arbitrum,
   [ChainId.Sepolia]: produce(sepolia, chain => {
-    chain.rpcUrls.default.http[0] = 'https://ethereum-sepolia-rpc.publicnode.com' as never;
+    (chain.rpcUrls.default.http[0] as string) = 'https://ethereum-sepolia-rpc.publicnode.com';
   }),
   [ChainId.Goerli]: goerli,
 };

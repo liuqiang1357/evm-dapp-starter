@@ -9,8 +9,7 @@ import { chainIdAtom } from '@/lib/states/evm';
 import { AccountIcon } from './account-icon';
 
 // Hot-fix: Connectkit uses this to resolve address name, but it is unstable.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(mainnet.rpcUrls.default.http as any)[0] = 'https://ethereum-rpc.publicnode.com';
+(mainnet.rpcUrls.default.http[0] as string) = 'https://ethereum-rpc.publicnode.com';
 
 export const ConnectKitProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const { resolvedTheme } = useTheme();
