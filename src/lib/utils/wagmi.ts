@@ -1,10 +1,12 @@
+import { coinbaseWallet, injected, safe, walletConnect } from '@wagmi/connectors';
 import {
   BaseError as WagmiBaseError,
   ConnectorNotConnectedError as WagmiConnectorNotConnectedError,
 } from '@wagmi/core';
-import { getDefaultConfig } from 'connectkit';
 import {
   Chain,
+  createClient,
+  http,
   BaseError as ViemBaseError,
   ChainMismatchError as ViemChainMismatchError,
   UserRejectedRequestError as ViemUserRejectedRequestError,
@@ -17,15 +19,23 @@ import {
   UserRejectedRequestError,
   WalletNotConnectedError,
 } from '../errors/evm';
+import { notNullish } from './misc';
 
-export const wagmiConfig = createConfig(
-  getDefaultConfig({
-    appName: 'demo',
-    walletConnectProjectId: '83333dd2a970d5644e1318f9370b15a1',
-    chains: supportedChainIds.map(chainId => chains[chainId]) as [Chain, ...Chain[]],
-    ssr: true,
-  }),
-);
+export const wagmiConfig = createConfig({
+  chains: supportedChainIds.map(chainId => chains[chainId]) as [Chain, ...Chain[]],
+  client({ chain }) {
+    return createClient({ chain, transport: http() });
+  },
+  connectors: [
+    injected({ target: 'metaMask' }),
+    coinbaseWallet({ appName: 'demo', overrideIsMetaMask: false }),
+    walletConnect({ showQrModal: false, projectId: '83333dd2a970d5644e1318f9370b15a1' }),
+    typeof window !== 'undefined' && window?.parent !== window
+      ? safe({ allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/] })
+      : null,
+  ].filter(notNullish),
+  ssr: true,
+});
 
 export function convertMaybeEvmError(error: Error): Error {
   if (error instanceof WagmiBaseError) {
