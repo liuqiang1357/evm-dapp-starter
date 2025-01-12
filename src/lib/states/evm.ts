@@ -27,6 +27,6 @@ getAccountResultAtom.onMount = setAtom => {
   return watchAccount(wagmiConfig, { onChange: update });
 };
 
-export const walletChainIdAtom = atom(get => get(getAccountResultAtom)?.chainId);
+export const connectorChainIdAtom = atom(get => get(getAccountResultAtom)?.chainId);
 
 export const accountAtom = atom(get => get(getAccountResultAtom)?.address);

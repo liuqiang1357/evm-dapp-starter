@@ -2,14 +2,17 @@ import { BaseError, BaseErrorOptions } from './base';
 
 export class EvmError extends BaseError {}
 
-export class WalletNotConnectedError extends EvmError {
+export class ConnectorNotConnectedError extends EvmError {
   constructor(message = 'Wallet not connected.', options: BaseErrorOptions = {}) {
     super(message, options);
   }
 }
 
 export class ChainMismatchError extends EvmError {
-  constructor(message = 'Chain mismatch.', options: BaseErrorOptions = {}) {
+  constructor(
+    message = 'The current chain of the wallet does not match the requesting one, please switch in the wallet.',
+    options: BaseErrorOptions = {},
+  ) {
     super(message, options);
   }
 }

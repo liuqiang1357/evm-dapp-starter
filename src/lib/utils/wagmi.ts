@@ -15,9 +15,9 @@ import { createConfig } from 'wagmi';
 import { chains, supportedChainIds } from '@/configs/chains';
 import {
   ChainMismatchError,
+  ConnectorNotConnectedError,
   EvmError,
   UserRejectedRequestError,
-  WalletNotConnectedError,
 } from '../errors/evm';
 import { notNullish } from './misc';
 
@@ -40,16 +40,16 @@ export const wagmiConfig = createConfig({
 export function convertMaybeEvmError(error: Error): Error {
   if (error instanceof WagmiBaseError) {
     if (error instanceof WagmiConnectorNotConnectedError) {
-      return new WalletNotConnectedError(undefined, { cause: error });
+      return new ConnectorNotConnectedError(undefined, { cause: error });
     }
     return new EvmError(error.shortMessage, { cause: error });
   }
   if (error instanceof ViemBaseError) {
     if (error instanceof ViemUserRejectedRequestError) {
-      return new UserRejectedRequestError(error.shortMessage, { cause: error });
+      return new UserRejectedRequestError(undefined, { cause: error });
     }
     if (error instanceof ViemChainMismatchError) {
-      return new ChainMismatchError(error.shortMessage, { cause: error });
+      return new ChainMismatchError(undefined, { cause: error });
     }
     return new EvmError(error.shortMessage, { cause: error });
   }

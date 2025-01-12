@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils/shadcn';
 import { Button } from '@/ui/shadcn/button';
 import { AccountIcon } from './account-icon';
 
-export const ConnectWallet: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
+export const Connector: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
   const account = useAtomValue(accountAtom);
 
   const { openProfile } = useModal();

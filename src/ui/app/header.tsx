@@ -2,7 +2,7 @@
 
 import { ComponentProps, FC } from 'react';
 import { cn } from '@/lib/utils/shadcn';
-import { ConnectWallet } from './connect-wallet';
+import { Connector } from './connector';
 import { SwitchTheme } from './switch-theme';
 
 export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
@@ -11,7 +11,7 @@ export const Header: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
       <div className="text-2xl">Evm Dapp Starter</div>
 
       <div className="flex space-x-4">
-        <ConnectWallet />
+        <Connector />
         <SwitchTheme />
       </div>
     </div>
