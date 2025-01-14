@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useDarkMode } from 'storybook-dark-mode';
 import '@/styles/index.css';
 import { fontsClassName } from '@/lib/utils/fonts';
-import { Connector } from '@/ui/app/connector';
+import { Connect } from '@/ui/app/connect';
 import { Providers } from '@/ui/app/providers';
 
 const preview: Preview = {
@@ -15,7 +15,7 @@ const preview: Preview = {
     nextjs: {
       appDirectory: true,
     },
-    showConnector: false,
+    showConnect: false,
   },
   decorators: [
     (Story, { parameters }) => {
@@ -34,7 +34,7 @@ const preview: Preview = {
       return (
         <Providers>
           <div className="space-y-6">
-            {parameters.showConnector === true && <Connector />}
+            {parameters.showConnect === true && <Connect />}
             <Story />
           </div>
         </Providers>

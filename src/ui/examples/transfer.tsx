@@ -70,9 +70,6 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
       className={cn('grid w-[40rem] grid-cols-[auto_1fr] items-center gap-4', className)}
       {...props}
     >
-      <div>Chain ID:</div>
-      <div>{chainId}</div>
-
       <div>Account:</div>
       <div>{account}</div>
 

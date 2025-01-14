@@ -10,8 +10,8 @@ import { store } from '@/lib/utils/jotai';
 import { queryClient } from '@/lib/utils/react-query';
 import { wagmiConfig } from '@/lib/utils/wagmi';
 import { Toaster } from '@/ui/shadcn/sonner';
-import { ConnectKitProvider } from './connectkit-provider';
 import { ErrorHandler } from './error-handler';
+import { RainbowKitProvider } from './rainbow-kit-provider';
 
 export const Providers: FC<{ children: ReactNode }> = ({ children }) => {
   return (
@@ -20,11 +20,11 @@ export const Providers: FC<{ children: ReactNode }> = ({ children }) => {
         <ReactQueryDevtools />
         <WagmiProvider config={wagmiConfig}>
           <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
-            <ConnectKitProvider>
+            <RainbowKitProvider>
               <Toaster />
               <ErrorHandler />
               {children}
-            </ConnectKitProvider>
+            </RainbowKitProvider>
           </NextThemesProvider>
         </WagmiProvider>
       </QueryClientProvider>
