@@ -2,7 +2,7 @@ name: Deploy Preview
 env:
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  NEXT_PUBLIC_TARGET: development
+  NEXT_PUBLIC_ENVIRONMENT: development
 on:
   workflow_dispatch:
   push:

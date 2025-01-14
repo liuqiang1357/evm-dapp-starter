@@ -14,9 +14,9 @@ import { Button } from '@/ui/shadcn/button';
 import { Input } from '@/ui/shadcn/input';
 
 export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
-  const account = useAtomValue(accountAtom);
-
   const chainId = useAtomValue(chainIdAtom);
+
+  const account = useAtomValue(accountAtom);
 
   const [tokenChainId, setTokenChainId] = useState<ChainId | null>(null);
 
@@ -62,7 +62,7 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
 
   useEffect(() => {
     setTokenChainId(chainId);
-    setToken(wethAddresses[chainId] ?? '');
+    setToken(wethAddresses[chainId]);
   }, [chainId]);
 
   return (
@@ -70,6 +70,9 @@ export const Transfer: FC<ComponentProps<'div'>> = ({ className, ...props }) => 
       className={cn('grid w-[40rem] grid-cols-[auto_1fr] items-center gap-4', className)}
       {...props}
     >
+      <div>Chain ID:</div>
+      <div>{chainId}</div>
+
       <div>Account:</div>
       <div>{account}</div>
 

@@ -9,16 +9,6 @@ import { atom } from 'jotai';
 import { supportedChainIds } from '@/configs/chains';
 import { wagmiConfig } from '../utils/wagmi';
 
-const chainIdBaseAtom = atom(supportedChainIds[0]);
-
-chainIdBaseAtom.onMount = setAtom => {
-  const update = () => setAtom(getChainId(wagmiConfig));
-  update();
-  return watchChainId(wagmiConfig, { onChange: update });
-};
-
-export const chainIdAtom = atom(get => get(chainIdBaseAtom));
-
 const getAccountResultAtom = atom<GetAccountReturnType | null>(null);
 
 getAccountResultAtom.onMount = setAtom => {
@@ -29,4 +19,14 @@ getAccountResultAtom.onMount = setAtom => {
 
 export const connectorChainIdAtom = atom(get => get(getAccountResultAtom)?.chainId);
 
-export const accountAtom = atom(get => get(getAccountResultAtom)?.address);
+export const connectorAccountAtom = atom(get => get(getAccountResultAtom)?.address);
+
+export const chainIdAtom = atom(supportedChainIds[0]);
+
+chainIdAtom.onMount = setAtom => {
+  const update = () => setAtom(getChainId(wagmiConfig));
+  update();
+  return watchChainId(wagmiConfig, { onChange: update });
+};
+
+export const accountAtom = connectorAccountAtom;
