@@ -19,8 +19,8 @@ export const Connect: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
   return (
     <div className={cn('group relative inline-flex', className)} {...props}>
       <Button
-        variant="outline"
         className={cn('flex items-center', account != null && 'group-hover:opacity-0')}
+        variant="outline"
         onClick={openConnectModal}
       >
         {account != null ? (
@@ -34,8 +34,8 @@ export const Connect: FC<ComponentProps<'div'>> = ({ className, ...props }) => {
       </Button>
       {account != null && (
         <Button
-          variant="destructive"
           className="absolute inset-0 flex h-auto items-center opacity-0 group-hover:opacity-100"
+          variant="destructive"
           onClick={() => disconnect(wagmiConfig)}
         >
           Disconnect

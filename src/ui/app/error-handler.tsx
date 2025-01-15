@@ -17,7 +17,9 @@ export const ErrorHandler: FC = () => {
 
       if (lastError instanceof BaseError) {
         setTimeout(() => {
-          if (lastError.expose) {
+          if (!lastError.handled) {
+            lastError.handled = true;
+
             if (recentMessages.current[lastError.message] !== true) {
               recentMessages.current[lastError.message] = true;
 
@@ -29,7 +31,12 @@ export const ErrorHandler: FC = () => {
             }
           }
         });
-        lastError.printTraceStack();
+        if (lastError.external) {
+          // eslint-disable-next-line no-console
+          console.log(lastError);
+        } else {
+          console.error(lastError);
+        }
       } else {
         console.error(lastError);
       }

@@ -13,7 +13,7 @@ import { chains, supportedChainIds } from '@/configs/chains';
 import {
   ChainMismatchError,
   ConnectorNotConnectedError,
-  EvmError,
+  UnknownEvmError,
   UserRejectedRequestError,
 } from '../errors/evm';
 
@@ -28,16 +28,16 @@ export function convertMaybeEvmError(error: Error): Error {
     if (error instanceof WagmiConnectorNotConnectedError) {
       return new ConnectorNotConnectedError(undefined, { cause: error });
     }
-    return new EvmError(error.shortMessage, { cause: error });
+    return new UnknownEvmError(error.shortMessage, { cause: error });
   }
   if (error instanceof ViemBaseError) {
-    if (error instanceof ViemUserRejectedRequestError) {
+    if (error.walk(error => error instanceof ViemUserRejectedRequestError) != null) {
       return new UserRejectedRequestError(undefined, { cause: error });
     }
-    if (error instanceof ViemChainMismatchError) {
+    if (error.walk(error => error instanceof ViemChainMismatchError) != null) {
       return new ChainMismatchError(undefined, { cause: error });
     }
-    return new EvmError(error.shortMessage, { cause: error });
+    return new UnknownEvmError(error.shortMessage, { cause: error });
   }
   return error;
 }

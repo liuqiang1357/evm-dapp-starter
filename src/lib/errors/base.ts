@@ -1,29 +1,32 @@
 export type BaseErrorOptions = {
   cause?: Error;
   data?: unknown;
-  expose?: boolean;
+  external?: boolean;
 };
 
-export class BaseError extends Error {
+export abstract class BaseError extends Error {
   cause: Error | null;
   data: unknown;
-  expose: boolean;
+  external: boolean;
+  handled = false;
 
   constructor(message: string, options: BaseErrorOptions = {}) {
     super(message);
     this.cause = options.cause ?? null;
     this.data = options.data;
-    this.expose = options.expose ?? true;
+    this.external = options.external ?? false;
   }
 
-  printTraceStack(): void {
-    console.error(this);
-    for (
-      let error = this.cause;
-      error != null;
-      error = error instanceof BaseError ? error.cause : null
-    ) {
-      console.error('Caused by:', error);
+  walk(fn: (error: Error) => boolean): Error | null {
+    if (fn(this)) {
+      return this;
     }
+    if (this.cause instanceof BaseError) {
+      return this.cause.walk(fn);
+    }
+    if (this.cause != null && fn(this.cause)) {
+      return this.cause;
+    }
+    return null;
   }
 }

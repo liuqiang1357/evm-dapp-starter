@@ -2,7 +2,7 @@ import { NextConfig } from 'next';
 
 const config: NextConfig = {
   webpack: config => {
-    config.externals.push('pino-pretty', 'encoding');
+    config.externals.push('pino-pretty');
     return config;
   },
 };
