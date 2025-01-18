@@ -1,31 +1,31 @@
 export type BaseErrorOptions = {
-  cause?: Error;
   data?: unknown;
-  external?: boolean;
+  cause?: Error;
+  needFix?: boolean;
 };
 
 export abstract class BaseError extends Error {
-  cause: Error | null;
+  abstract name: string;
   data: unknown;
-  external: boolean;
+  cause: Error | null;
+  needFix: boolean;
   handled = false;
 
   constructor(message: string, options: BaseErrorOptions = {}) {
     super(message);
-    this.cause = options.cause ?? null;
     this.data = options.data;
-    this.external = options.external ?? false;
+    this.cause = options.cause ?? null;
+    this.needFix = options.needFix ?? true;
   }
 
-  walk(fn: (error: Error) => boolean): Error | null {
-    if (fn(this)) {
-      return this;
-    }
-    if (this.cause instanceof BaseError) {
-      return this.cause.walk(fn);
-    }
-    if (this.cause != null && fn(this.cause)) {
-      return this.cause;
+  walk(fn?: (error: Error) => boolean): Error | null {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    let current: Error | null = this;
+    while (current instanceof Error) {
+      if ((fn != null && fn(current)) || (fn == null && !(current.cause instanceof Error))) {
+        return current;
+      }
+      current = current.cause instanceof Error ? current.cause : null;
     }
     return null;
   }

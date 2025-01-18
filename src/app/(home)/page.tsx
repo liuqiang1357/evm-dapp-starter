@@ -6,7 +6,10 @@ export default function Page() {
       <h1>Home</h1>
       <div className="mt-3 flex flex-col space-y-2">
         <Link className="text-primary" href="/examples/transfer">
-          Example: transfer
+          Example: Transfer
+        </Link>
+        <Link className="text-primary" href="/examples/server-time">
+          Example: Server Time
         </Link>
       </div>
     </div>

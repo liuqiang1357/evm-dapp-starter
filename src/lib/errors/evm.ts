@@ -1,30 +1,36 @@
 import { BaseError, BaseErrorOptions } from './base';
 
-export abstract class EvmError extends BaseError {}
+export class EvmError extends BaseError {
+  name = 'EvmError';
 
-export class UnknownEvmError extends EvmError {
-  constructor(message = 'Unknown evm error.', options: BaseErrorOptions = {}) {
+  constructor(message = 'Evm error.', options: BaseErrorOptions = {}) {
     super(message, options);
   }
 }
 
 export class ConnectorNotConnectedError extends EvmError {
+  name = 'ConnectorNotConnectedError';
+
   constructor(message = 'Wallet not connected.', options: BaseErrorOptions = {}) {
-    super(message, { ...options, external: options.external ?? true });
+    super(message, { ...options, needFix: options.needFix ?? false });
   }
 }
 
 export class ChainMismatchError extends EvmError {
+  name = 'ChainMismatchError';
+
   constructor(
     message = 'The current chain of the wallet does not match the requesting one, please switch in the wallet.',
     options: BaseErrorOptions = {},
   ) {
-    super(message, { ...options, external: options.external ?? true });
+    super(message, { ...options, needFix: options.needFix ?? false });
   }
 }
 
 export class UserRejectedRequestError extends EvmError {
+  name = 'UserRejectedRequestError';
+
   constructor(message = 'User rejected request.', options: BaseErrorOptions = {}) {
-    super(message, { ...options, external: options.external ?? true });
+    super(message, { ...options, needFix: options.needFix ?? false });
   }
 }

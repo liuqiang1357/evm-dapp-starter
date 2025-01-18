@@ -31,11 +31,11 @@ export const ErrorHandler: FC = () => {
             }
           }
         });
-        if (lastError.external) {
+        if (lastError.needFix) {
+          console.error(lastError);
+        } else {
           // eslint-disable-next-line no-console
           console.log(lastError);
-        } else {
-          console.error(lastError);
         }
       } else {
         console.error(lastError);
