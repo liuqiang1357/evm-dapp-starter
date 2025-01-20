@@ -1,16 +1,25 @@
-import { readContract, switchChain, writeContract } from '@wagmi/core';
+import {
+  readContract,
+  sendTransaction,
+  switchChain,
+  getBalance as wagmiGetBalance,
+  writeContract,
+} from '@wagmi/core';
 import { Address, Hash } from 'viem';
-import { ChainId } from '@/configs/chains';
+import { ChainId, chains } from '@/configs/chains';
 import { erc20Abi } from '../abis/erc20';
 import { amountToRawAmount, rawAmountToAmount } from '../utils/misc';
 import { wagmiConfig } from '../utils/wagmi';
 
 export type GetDecimalsParams = {
   chainId: ChainId;
-  address: Address;
+  address: Address | null;
 };
 
 export async function getDecimals(params: GetDecimalsParams): Promise<number> {
+  if (params.address == null) {
+    return chains[params.chainId].nativeCurrency.decimals;
+  }
   const decimals = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -22,10 +31,13 @@ export async function getDecimals(params: GetDecimalsParams): Promise<number> {
 
 export type GetSymbolParams = {
   chainId: ChainId;
-  address: Address;
+  address: Address | null;
 };
 
 export async function getSymbol(params: GetDecimalsParams): Promise<string> {
+  if (params.address == null) {
+    return chains[params.chainId].nativeCurrency.symbol;
+  }
   const symbol = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -37,12 +49,19 @@ export async function getSymbol(params: GetDecimalsParams): Promise<string> {
 
 export type GetBalanceParams = {
   chainId: ChainId;
-  address: Address;
+  address: Address | null;
   account: Address;
   decimals: number;
 };
 
 export async function getBalance(params: GetBalanceParams): Promise<string> {
+  if (params.address == null) {
+    const balance = await wagmiGetBalance(wagmiConfig, {
+      chainId: params.chainId,
+      address: params.account,
+    });
+    return rawAmountToAmount(balance.value, params.decimals);
+  }
   const balance = await readContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
@@ -55,7 +74,7 @@ export async function getBalance(params: GetBalanceParams): Promise<string> {
 
 export type TransferParams = {
   chainId: ChainId;
-  address: Address;
+  address: Address | null;
   account: Address;
   decimals: number;
   to: Address;
@@ -65,6 +84,14 @@ export type TransferParams = {
 export async function transfer(params: TransferParams): Promise<Hash> {
   await switchChain(wagmiConfig, { chainId: params.chainId });
 
+  if (params.address == null) {
+    const hash = await sendTransaction(wagmiConfig, {
+      chainId: params.chainId,
+      to: params.to,
+      value: amountToRawAmount(params.amount, params.decimals),
+    });
+    return hash;
+  }
   const hash = await writeContract(wagmiConfig, {
     chainId: params.chainId,
     address: params.address,
