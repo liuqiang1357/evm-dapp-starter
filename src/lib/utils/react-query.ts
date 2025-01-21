@@ -7,7 +7,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 60_000,
-      retryDelay: 0,
+      retry: false,
       queryKeyHashFn: stringify,
     },
   },

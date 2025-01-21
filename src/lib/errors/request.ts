@@ -8,16 +8,17 @@ export class RequestError extends BaseError {
   }
 }
 
-export class NetworkError extends RequestError {
-  name = 'NetworkError';
+export class TimeoutError extends RequestError {
+  name = 'TimeoutError';
 
-  constructor(message = 'Network error.', options: BaseErrorOptions = {}) {
+  constructor(message = 'Request timeout.', options: BaseErrorOptions = {}) {
     super(message, options);
   }
 }
 
 export type HttpRequestErrorData = {
   status: number;
+  json?: unknown;
 };
 
 export type HttpRequestErrorOptions = BaseErrorOptions & {
@@ -27,29 +28,34 @@ export type HttpRequestErrorOptions = BaseErrorOptions & {
 export class HttpRequestError extends RequestError {
   name = 'HttpRequestError';
   status: number;
+  json: unknown;
 
-  constructor(message = 'Http request error.', options: HttpRequestErrorOptions) {
-    super(message, options);
+  constructor(message: string | undefined, options: HttpRequestErrorOptions) {
+    super(message ?? `Request failed with status code ${options.data.status}.`, options);
     this.status = options.data.status;
+    this.json = options.data.json;
   }
 }
 
-export type NextRequestErrorData = HttpRequestErrorData & {
+export type NextRequestErrorData = {
+  status: number;
   responseErrorName: string;
   responseErrorData: unknown;
 };
 
-export type NextRequestErrorOptions = HttpRequestErrorOptions & {
+export type NextRequestErrorOptions = BaseErrorOptions & {
   data: NextRequestErrorData;
 };
 
-export class NextRequestError extends HttpRequestError {
+export class NextRequestError extends RequestError {
   name = 'NextRequestError';
+  status: number;
   responseErrorName: string;
   responseErrorData: unknown;
 
   constructor(message = 'Next request error.', options: NextRequestErrorOptions) {
     super(message, options);
+    this.status = options.data.status;
     this.responseErrorName = options.data.responseErrorName;
     this.responseErrorData = options.data.responseErrorData;
   }
