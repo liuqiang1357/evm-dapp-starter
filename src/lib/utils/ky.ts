@@ -1,5 +1,5 @@
 import ky, { HTTPError, TimeoutError as KyTimeoutError, Options } from 'ky';
-import { HttpRequestError, NextRequestError, TimeoutError } from '../errors/request';
+import { ApiRequestError, HttpRequestError, TimeoutError } from '../errors/request';
 
 export type HttpRequestParams = Options & {
   url?: string;
@@ -11,33 +11,35 @@ export async function httpRequest<T = unknown>(params: HttpRequestParams): Promi
     const response = await ky(url ?? '', { retry: 0, timeout: 30_000, ...rest });
     return response.json();
   } catch (error) {
+    if (error instanceof KyTimeoutError) {
+      throw new TimeoutError(undefined, { cause: error });
+    }
+    let status: number | undefined;
+    let json: unknown;
     if (error instanceof HTTPError) {
-      let json = null;
       try {
+        status = error.response.status;
         json = await error.response.json();
       } catch {
         // ignore
       }
-      throw new HttpRequestError(undefined, {
-        data: { status: error.response.status, json },
-        cause: error,
-      });
     }
-    if (error instanceof KyTimeoutError) {
-      throw new TimeoutError(undefined, { cause: error });
+    if (error instanceof Error) {
+      throw new HttpRequestError(undefined, { data: { status, json }, cause: error });
     }
     throw error;
   }
 }
 
-export async function nextRequest<T = unknown>(params: HttpRequestParams): Promise<T> {
+export async function apiRequest<T = unknown>(params: HttpRequestParams): Promise<T> {
   try {
     return await httpRequest<T>({ prefixUrl: '/api', ...params });
   } catch (error) {
     if (error instanceof HttpRequestError) {
-      const json = error.json as { name: string; message: string; data: unknown } | null;
-      if (json != null) {
-        throw new NextRequestError(json.message, {
+      if (error.status != null && error.json != null) {
+        const json = error.json as { name: string; message: string; data: unknown };
+
+        throw new ApiRequestError(json.message, {
           data: {
             status: error.status,
             responseErrorName: json.name,

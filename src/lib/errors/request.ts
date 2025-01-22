@@ -1,14 +1,6 @@
 import { BaseError, BaseErrorOptions } from './base';
 
-export class RequestError extends BaseError {
-  name = 'RequestError';
-
-  constructor(message = 'Request error.', options: BaseErrorOptions = {}) {
-    super(message, options);
-  }
-}
-
-export class TimeoutError extends RequestError {
+export class TimeoutError extends BaseError {
   name = 'TimeoutError';
 
   constructor(message = 'Request timeout.', options: BaseErrorOptions = {}) {
@@ -16,44 +8,44 @@ export class TimeoutError extends RequestError {
   }
 }
 
-export type HttpRequestErrorData = {
-  status: number;
-  json?: unknown;
-};
-
 export type HttpRequestErrorOptions = BaseErrorOptions & {
-  data: HttpRequestErrorData;
+  data?: {
+    status?: number;
+    json?: unknown;
+  };
 };
 
-export class HttpRequestError extends RequestError {
+export class HttpRequestError extends BaseError {
   name = 'HttpRequestError';
-  status: number;
+  status: number | null;
   json: unknown;
 
-  constructor(message: string | undefined, options: HttpRequestErrorOptions) {
-    super(message ?? `Request failed with status code ${options.data.status}.`, options);
-    this.status = options.data.status;
-    this.json = options.data.json;
+  constructor(message: string | undefined, options: HttpRequestErrorOptions = {}) {
+    const status = options.data?.status;
+    super(
+      message ?? `HTTP request failed${status != null ? ` with status ${status}` : ''}.`,
+      options,
+    );
+    this.status = status ?? null;
+    this.json = options.data?.json;
   }
 }
 
-export type NextRequestErrorData = {
+export type ApiRequestErrorOptions = BaseErrorOptions & {
+  data: {
+    status: number;
+    responseErrorName: string;
+    responseErrorData: unknown;
+  };
+};
+
+export class ApiRequestError extends BaseError {
+  name = 'ApiRequestError';
   status: number;
   responseErrorName: string;
   responseErrorData: unknown;
-};
 
-export type NextRequestErrorOptions = BaseErrorOptions & {
-  data: NextRequestErrorData;
-};
-
-export class NextRequestError extends RequestError {
-  name = 'NextRequestError';
-  status: number;
-  responseErrorName: string;
-  responseErrorData: unknown;
-
-  constructor(message = 'Next request error.', options: NextRequestErrorOptions) {
+  constructor(message = 'API request failed.', options: ApiRequestErrorOptions) {
     super(message, options);
     this.status = options.data.status;
     this.responseErrorName = options.data.responseErrorName;
