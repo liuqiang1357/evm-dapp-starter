@@ -1,6 +1,5 @@
 import { getDefaultWallets } from '@rainbow-me/rainbowkit';
-import { BaseError as WagmiBaseError } from '@wagmi/core';
-import { createConfig } from '@wagmi/core';
+import { createConfig, BaseError as WagmiBaseError } from '@wagmi/core';
 import {
   Chain,
   createClient,
